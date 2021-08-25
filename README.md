@@ -1,74 +1,81 @@
 # nginx-regx
 nginx regx config
-# --------------------------------------------------------------------------------------------------------------------------------------------
-# Search-Order       Modifier       Description                                                        Match-Type        Stops-search-on-match
-# --------------------------------------------------------------------------------------------------------------------------------------------
-#     1st               =           The URI must match the specified pattern exactly                  Simple-string              Yes
-#     2nd               ^~          The URI must begin with the specified pattern                     Simple-string              Yes
-#     3rd             (None)        The URI must begin with the specified pattern                     Simple-string               No
-#     4th               ~           The URI must be a case-sensitive match to the specified Rx      Perl-Compatible-Rx      Yes (first match)                 
-#     4th               ~*          The URI must be a case-insensitive match to the specified Rx    Perl-Compatible-Rx      Yes (first match)
-#     N/A               @           Defines a named location block.                                   Simple-string              Yes
-# --------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------
+ Search-Order       Modifier       Description                                                        Match-Type        Stops-search-on-match
+--------------------------------------------------------------------------------------------------------------------------------------------
+     1st               =           The URI must match the specified pattern exactly                  Simple-string              Yes
+     2nd               ^~          The URI must begin with the specified pattern                     Simple-string              Yes
+     3rd             (None)        The URI must begin with the specified pattern                     Simple-string               No
+     4th               ~           The URI must be a case-sensitive match to the specified Rx      Perl-Compatible-Rx      Yes (first match)                 
+     4th               ~*          The URI must be a case-insensitive match to the specified Rx    Perl-Compatible-Rx      Yes (first match)
+     N/A               @           Defines a named location block.                                   Simple-string              Yes
+ --------------------------------------------------------------------------------------------------------------------------------------------
 
-# -----------------------------------------------------------------------------------------
-#    ()    : Group/Capturing-group, capturing mean match and retain/output/use what matched
-#            the patern inside (). the default bracket mode is "capturing group" while (?:) 
-#            is a non capturing group. example (?:a|b) match a or b in a non capturing mode
-# ----------------------------------------------------------------------------------------- 
-#    ?:    : Non capturing group
-#    ?=    : Positive look ahead 
-#    ?!    : is for negative look ahead (do not match the following...)
-#    ?<=   : is for positive look behind
-#    ?<!   : is for negative look behind
-# -----------------------------------------------------------------------------------------
+ -----------------------------------------------------------------------------------------
+    ()    : Group/Capturing-group, capturing mean match and retain/output/use what matched
+            the patern inside (). the default bracket mode is "capturing group" while (?:) 
+            is a non capturing group. example (?:a|b) match a or b in a non capturing mode
+ ----------------------------------------------------------------------------------------- 
+    ?:    : Non capturing group
+    ?=    : Positive look ahead 
+    ?!    : is for negative look ahead (do not match the following...)
+    ?<=   : is for positive look behind
+    ?<!   : is for negative look behind
+ -----------------------------------------------------------------------------------------
 
-# -----------------------------------------------------------------------------------------
-#     /    : It doesn't actually do anything. In Javascript, Perl and some other languages, 
-#            it is used as a delimiter character explicitly for regular expressions.
-#            Some languages like PHP use it as a delimiter inside a string, 
-#            with additional options passed at the end, just like Javascript and Perl.
-#            Nginx does not use delimiter, / can be escaped with \/ for code portability 
-#            purpose BUT this is not required for nginx / are handled literally 
-#            (don't have other meaning than /)
-# -----------------------------------------------------------------------------------------
+ -----------------------------------------------------------------------------------------
+     /    : It doesn't actually do anything. In Javascript, Perl and some other languages, 
+            it is used as a delimiter character explicitly for regular expressions.
+            Some languages like PHP use it as a delimiter inside a string, 
+            with additional options passed at the end, just like Javascript and Perl.
+            Nginx does not use delimiter, / can be escaped with \/ for code portability 
+            purpose BUT this is not required for nginx / are handled literally 
+            (don't have other meaning than /)
+ -----------------------------------------------------------------------------------------
 
-# -----------------------------------------------------------------------------------------
-#     ~     : Enable regex mode for location (in regex ~ mean case-sensitive match)
-#     ~*    : case-insensitive match
-#     |     : Or
-#     ()    : Match group or evaluate the content of ()
-#     $     : the expression must be at the end of the evaluated text 
-#             (no char/text after the match) $ is usually used at the end of a regex 
-#             location expression. 
-#     ?     : Check for zero or one occurrence of the previous char ex jpe?g
-#     ^~    : The match must be at the beginning of the text, note that nginx will not perform 
-#             any further regular expression match even if an other match is available 
-#             (check the table above); ^ indicate that the match must be at the start of 
-#             the uri text, while ~ indicates a regular expression match mode.
-#             example (location ^~ /realestate/.*)
-#             Nginx evaluation exactly this as don't check regexp locations if this 
-#             location is longest prefix match.
-#     =     : Exact match, no sub folders (location = /)
-#     ^     : Match the beginning of the text (opposite of $). By itself, ^ is a 
-#             shortcut for all paths (since they all have a beginning).
-#     .*    : Match zero, one or more occurrence of any char
-#     \     : Escape the next char
-#     .     : Any char 
-#     *     : Match zero, one or more occurrence of the previous char
-#     !     : Not (negative look ahead)
-#     {}    : Match a specific number of occurrence ex. [0-9]{3} match 342 but not 32
-#             {2,4} match length of 2, 3 and 4
-#     +     : Match one or more occurrence of the previous char 
-#     []    : Match any char inside
-# --------------------------------------------------------------------------------------------
+ -----------------------------------------------------------------------------------------
+     ~     : Enable regex mode for location (in regex ~ mean case-sensitive match)
+     ~*    : case-insensitive match
+     |     : Or
+     ()    : Match group or evaluate the content of ()
+     $     : the expression must be at the end of the evaluated text 
+             (no char/text after the match) $ is usually used at the end of a regex 
+             location expression. 
+     ?     : Check for zero or one occurrence of the previous char ex jpe?g
+     ^~    : The match must be at the beginning of the text, note that nginx will not perform 
+             any further regular expression match even if an other match is available 
+             (check the table above); ^ indicate that the match must be at the start of 
+             the uri text, while ~ indicates a regular expression match mode.
+             example (location ^~ /realestate/.*)
+             Nginx evaluation exactly this as don't check regexp locations if this 
+             location is longest prefix match.
+     =     : Exact match, no sub folders (location = /)
+     ^     : Match the beginning of the text (opposite of $). By itself, ^ is a 
+             shortcut for all paths (since they all have a beginning).
+     .*    : Match zero, one or more occurrence of any char
+     \     : Escape the next char
+     .     : Any char 
+     *     : Match zero, one or more occurrence of the previous char
+     !     : Not (negative look ahead)
+     {}    : Match a specific number of occurrence ex. [0-9]{3} match 342 but not 32
+             {2,4} match length of 2, 3 and 4
+     +     : Match one or more occurrence of the previous char 
+     []    : Match any char inside
+ --------------------------------------------------------------------------------------------
+### ref
 
 Any character except [\^$.|?*+()	Literal character
+
 \ followed by any of [\^$.|?*+(){}	Backslash escapes a metacharacter
+
 .	Any character
+
 |	Alternation
+
 \|	Alternation
+
 ?	Greedy quantifier
+
 \?	Greedy quantifier
 ??	Lazy quantifier
 ?+	Possessive quantifier
